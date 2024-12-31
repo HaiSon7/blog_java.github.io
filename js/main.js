@@ -710,7 +710,7 @@ public class University {
     
     private Singleton() {}
     
-    public static Singleton getInstance() {
+    public static synchronized Singleton getInstance() {
         if (instance == null) {
             instance = new Singleton();
         }
@@ -1077,6 +1077,268 @@ observer.observe(element, {
 });</code></pre>
             </div>
         `
+    },
+    'spring-boot-api': {
+        title: 'Spring Boot: Xây Dựng RESTful API',
+        date: '05/12/2024',
+        content: `
+            <div class="blog-content">
+                <h1>Spring Boot: Xây Dựng RESTful API</h1>
+                <p class="post-meta">Đăng ngày: 05/12/2024</p>
+                <img src="images/spring-boot.png" alt="Spring Boot">
+                
+                <h2>1. Giới thiệu về Spring Boot</h2>
+                <p>Spring Boot là một framework giúp đơn giản hóa việc phát triển ứng dụng Spring bằng cách cung cấp các cấu hình mặc định và giảm thiểu công việc cấu hình.</p>
+
+                <h2>2. Cài đặt và Cấu hình</h2>
+                <pre><code>// pom.xml
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+
+                <h2>3. Tạo REST Controller</h2>
+                <pre><code>@RestController
+@RequestMapping("/api")
+public class UserController {
+    
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.findAll();
+    }
+    
+    @PostMapping("/users")
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+}</code></pre>
+
+                <h2>4. Exception Handling</h2>
+                <pre><code>@ControllerAdvice
+public class GlobalExceptionHandler {
+    
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(
+        ResourceNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+            new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+}</code></pre>
+
+                <h2>5. Security Configuration</h2>
+                <pre><code>@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/api/public/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .httpBasic();
+    }
+}</code></pre>
+            </div>
+        `
+    },
+    'design-patterns': {
+        title: 'Design Patterns trong Java',
+        date: '03/12/2024',
+        content: `
+            <div class="blog-content">
+                <h1>Design Patterns trong Java</h1>
+                <p class="post-meta">Đăng ngày: 03/12/2024</p>
+                <img src="images/design-patterns.png" alt="Design Patterns">
+                
+                <h2>1. Creational Patterns</h2>
+                <h3>Singleton Pattern</h3>
+                <pre><code>public class Singleton {
+    private static Singleton instance;
+    
+    private Singleton() {}
+    
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}</code></pre>
+
+                <h3>Factory Pattern</h3>
+                <pre><code>public interface Animal { void makeSound(); }
+
+public class AnimalFactory {
+    public Animal createAnimal(String type) {
+        if (type.equals("dog")) {
+            return new Dog();
+        } else if (type.equals("cat")) {
+            return new Cat();
+        }
+        return null;
+    }
+}</code></pre>
+
+                <h2>2. Structural Patterns</h2>
+                <h3>Adapter Pattern</h3>
+                <pre><code>public interface MediaPlayer {
+    void play(String audioType, String fileName);
+}
+
+public class MediaAdapter implements MediaPlayer {
+    AdvancedMediaPlayer advancedMusicPlayer;
+
+    public MediaAdapter(String audioType) {
+        if(audioType.equalsIgnoreCase("vlc")) {
+            advancedMusicPlayer = new VlcPlayer();
+        }
+    }
+}</code></pre>
+
+                <h2>3. Behavioral Patterns</h2>
+                <h3>Observer Pattern</h3>
+                <pre><code>public interface Observer {
+    void update(String message);
+}
+
+public class Subject {
+    private List<Observer> observers = new ArrayList<>();
+    
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+    
+    public void notifyObservers(String message) {
+        for(Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+}</code></pre>
+            </div>
+        `
+    },
+    'react-hooks': {
+        title: 'React Hooks: Toàn Tập',
+        date: '01/12/2024',
+        content: `
+            <div class="blog-content">
+                <h1>React Hooks: Toàn Tập</h1>
+                <p class="post-meta">Đăng ngày: 01/12/2024</p>
+                <img src="images/react-hooks.png" alt="React Hooks">
+                
+                <h2>1. useState Hook</h2>
+                <pre><code>import React, { useState } from 'react';
+
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+        </div>
+    );
+}</code></pre>
+
+                <h2>2. useEffect Hook</h2>
+                <pre><code>import React, { useState, useEffect } from 'react';
+
+function DataFetcher() {
+    const [data, setData] = useState(null);
+    
+    useEffect(() => {
+        fetch('https://api.example.com/data')
+            .then(response => response.json())
+            .then(data => setData(data));
+            
+        return () => {
+            // cleanup code
+        };
+    }, []); // Empty dependency array
+    
+    return <div>{/* render data */}</div>;
+}</code></pre>
+
+                <h2>3. useContext Hook</h2>
+                <pre><code>const ThemeContext = React.createContext();
+
+function App() {
+    return (
+        <ThemeContext.Provider value="dark">
+            <ThemedButton />
+        </ThemeContext.Provider>
+    );
+}
+
+function ThemedButton() {
+    const theme = useContext(ThemeContext);
+    return <button className={theme}>Themed Button</button>;
+}</code></pre>
+            </div>
+        `
+    },
+    'microservices': {
+        title: 'Microservices với Spring Cloud',
+        date: '28/11/2024',
+        content: `
+            <div class="blog-content">
+                <h1>Microservices với Spring Cloud</h1>
+                <p class="post-meta">Đăng ngày: 28/11/2024</p>
+                <img src="images/microservices.png" alt="Microservices">
+                
+                <h2>1. Service Discovery với Eureka</h2>
+                <pre><code>@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+
+// Client configuration
+@SpringBootApplication
+@EnableDiscoveryClient
+public class ServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceApplication.class, args);
+    }
+}</code></pre>
+
+                <h2>2. API Gateway với Spring Cloud Gateway</h2>
+                <pre><code>@Configuration
+public class GatewayConfig {
+    @Bean
+    public RouteLocator customRouteLocator(
+            RouteLocatorBuilder builder) {
+        return builder.routes()
+            .route("user_route", r -> r
+                .path("/users/**")
+                .uri("lb://user-service"))
+            .route("order_route", r -> r
+                .path("/orders/**")
+                .uri("lb://order-service"))
+            .build();
+    }
+}</code></pre>
+
+                <h2>3. Circuit Breaker với Resilience4j</h2>
+                <pre><code>@CircuitBreaker(name = "userService")
+@GetMapping("/users/{id}")
+public User getUser(@PathVariable Long id) {
+    return userServiceClient.getUser(id);
+}
+
+@CircuitBreaker(name = "userService", fallbackMethod = "getUserFallback")
+public User getUserFallback(Long id, Exception ex) {
+    return new User(); // Return default user
+}</code></pre>
+            </div>
+        `
     }
 };
 
@@ -1088,7 +1350,11 @@ function getPostIdFromTitle(title) {
         'Java Collections Framework: Toàn Tập': 'java-collections',
         'Modern JavaScript: ES6+ Features': 'modern-javascript',
         'Async JavaScript: Promise và Async/Await': 'async-javascript',
-        'DOM Manipulation: Tips và Tricks': 'dom-manipulation'
+        'DOM Manipulation: Tips và Tricks': 'dom-manipulation',
+        'Spring Boot: Xây Dựng RESTful API': 'spring-boot-api',
+        'Design Patterns trong Java': 'design-patterns',
+        'React Hooks: Toàn Tập': 'react-hooks',
+        'Microservices với Spring Cloud': 'microservices'
     };
     return titleMap[title];
 }
